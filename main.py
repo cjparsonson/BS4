@@ -31,12 +31,34 @@ requests = requests.get("https://news.ycombinator.com/news")
 yc_webpage = requests.text
 
 soup = BeautifulSoup(yc_webpage, "html.parser")
-article = soup.find(class_="athing", id="36380711")
-article_class = article.find(class_="titleline")
-article_text = article_class.find("a").getText()
-article_link = article_class.find("a").get("href")
-article_class_score = soup.find(class_="score", id="score_36380711").getText()
+articles = soup.find_all(class_="athing")
 
-print(article_text)
-print(article_link)
-print(article_class_score)
+article_texts = []
+article_links = []
+article_scores = []
+
+for article in articles:
+    article_id = article.get("id")
+    article_class = article.find(class_="titleline")
+    article_text = article_class.find("a").getText()
+    article_link = article_class.find("a").get("href")
+    article_class_score = soup.find(class_="score", id=f"score_{article_id}").getText()
+    # append to lists
+    article_texts.append(article_text)
+    article_links.append(article_link)
+    article_scores.append(int(article_class_score.split()[0]))  # split the score on whitespace and convert to int
+
+#  get index of highest score
+highest_score = max(article_scores)
+highest_score_index = article_scores.index(highest_score)
+
+# print article with the highest score
+print(f"""Article with the highest score:
+{article_texts[highest_score_index]}
+{article_links[highest_score_index]}
+Upvotes: {article_scores[highest_score_index]}""")
+
+
+
+
+
