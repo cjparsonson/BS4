@@ -87,8 +87,6 @@ smtp_port = 587
 message = EmailMessage()
 message.set_content(email_message)
 context = ssl.create_default_context()
-print(sender)
-print(password)
 
 # Send email
 with smtplib.SMTP(smtp_server, smtp_port) as connection:
